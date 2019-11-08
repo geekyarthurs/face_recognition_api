@@ -7,6 +7,26 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 
+def allowed_image(filename):
+    
+    # We only want files with a . in the filename
+    if not "." in filename:
+        return False
+
+    # Split the extension from the filename
+    ext = filename.rsplit(".", 1)[1]
+
+    print(ext)
+    # Check if the extension is in ALLOWED_IMAGE_EXTENSIONS
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
+        print(ext.upper())
+        return True
+    else:
+
+        return False
+
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_image():
@@ -20,8 +40,8 @@ def upload_image():
         
         
         file = request.files['file']
-        if not allowed_image(file):
-            return "Invalid Image :D Not hacking"
+        if not allowed_image(file.filename):
+            return redirect("https://pbs.twimg.com/media/CAf-6-oWAAAU4sz.jpg")
         secure_file = file.filename
         file.save("./uploads/" + secure_file)
         face_detector("./uploads/" + secure_file)
@@ -42,21 +62,6 @@ def upload_image():
     if request.method == 'GET':
         
         return render_template("index.html")
-
-def allowed_image(filename):
-    
-    # We only want files with a . in the filename
-    if not "." in filename:
-        return False
-
-    # Split the extension from the filename
-    ext = filename.rsplit(".", 1)[1]
-
-    # Check if the extension is in ALLOWED_IMAGE_EXTENSIONS
-    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
-        return True
-    else:
-        return False
 
 
 if __name__ == '__main__':
