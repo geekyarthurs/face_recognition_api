@@ -9,9 +9,7 @@ def face_detector(image):
 
 
     img = cv2.imread(image)
-    scaling_factor = 0.5
-    img = cv2.resize(img, (0,0), fx=scaling_factor, fy=scaling_factor)
-
+    
     face_rects = face_cascade.detectMultiScale(img, 1.3, 5)
 
     # Draw rectangles on the image
