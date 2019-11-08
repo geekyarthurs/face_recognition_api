@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, url_for, render_template, send_file, send_from_directory
+from flask import Flask, request, redirect, url_for, render_template, send_file, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 from face_detection import face_detector
 UPLOAD_FOLDER = '/uploads'
@@ -16,11 +16,21 @@ def upload_image():
             
             return 'Image Not Found'
         file = request.files['file']
-        secure_file = secure_filename(file.filename)
+        secure_file = file.filename
         file.save("./uploads/" + secure_file)
         face_detector("./uploads/" + secure_file)
+        print(secure_file)
 
-        return send_file("./uploads/" + secure_file,attachment_filename="image.jpg")
+
+        response = make_response(send_file("./uploads/" + secure_file))
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = 0
+        
+        return response
+
+
+        
 
         
     if request.method == 'GET':
