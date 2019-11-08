@@ -1,0 +1,3 @@
+py_modules/
+.vscode
+__pycache__
