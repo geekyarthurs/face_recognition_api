@@ -17,12 +17,12 @@ def upload_image():
             return 'Image Not Found'
         file = request.files['file']
         secure_file = file.filename
-        file.save(secure_file)
-        face_detector(secure_file)
+        file.save("./uploads/" + secure_file)
+        face_detector("./uploads/" + secure_file)
         print(secure_file)
 
 
-        response = make_response(secure_file))
+        response = make_response(send_file("./uploads/" + secure_file))
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = 0
